@@ -8,7 +8,7 @@ import InputTodo from "./InputTodo";
 class TodoContainer extends React.Component {
   state =  {
     todos: [
-      {
+      /*{
         id: uuidv4(),
         title: "Setup development environment",
         completed: true
@@ -22,7 +22,7 @@ class TodoContainer extends React.Component {
         id: uuidv4(),
         title: "Deploy to live server",
         completed: false
-      }
+      }*/
     ]
   }
   handleClick(i) {
@@ -107,6 +107,37 @@ class TodoContainer extends React.Component {
     this.setState({
       todos: [...this.state.todos, newTodo]
     })
+  }
+  /*// works
+  componentDidMount() {
+    fetch("https://jsonplaceholder.typicode.com/todos?_limit=10")
+      .then(response => response.json())
+      .then(data => {
+        this.setState({
+          todos: data.map(d => {
+            return {
+              ...d,
+              id: uuidv4()
+            }
+          })
+        })
+      })
+  }*/
+  componentDidMount() {
+    const temp = localStorage.getItem("todos")
+    const loadedTodos = JSON.parse(temp)
+    if( loadedTodos) {
+      this.setState({
+        todos: loadedTodos
+      })
+    }
+  }
+
+  componentDidUpdate(prevProps,prevState) {
+    if(prevState.todos !== this.state.todos) {
+      const temp = JSON.stringify(this.state.todos)
+      localStorage.setItem("todos", temp)
+    }
   }
 
   render() {
